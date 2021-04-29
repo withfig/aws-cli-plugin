@@ -31,6 +31,8 @@ def argumentsDictionary(args):
 		arg = args[argName]
 		choices = arg.choices if arg.choices == None or isinstance(arg.choices, list) else list(arg.choices)
 		description = stripHTML(arg.documentation)
+		variadic = arg.nargs != None and arg.nargs == "+"
+		# print(arg.cli_name, arg.nargs, arg.required)
 		# js = { "name": arg.cli_name, "type": arg.cli_type_name, "nargs": arg.nargs, "required":  arg.required, "documentation": arg.documentation, "suggestions": arg.choices}
 		raw = {"name": arg.cli_name }
 
@@ -40,6 +42,10 @@ def argumentsDictionary(args):
 		if arg.positional_arg:
 			if choices != None and len(choices) > 0:
 				raw["suggestions"] = choices
+			# raw["isOptional"] = not arg.required 
+			if variadic:
+				raw["variadic"] = variadic
+
 			positional.append(raw)
 		elif arg.cli_type_name == "boolean":
 			flags.append(raw)
@@ -47,7 +53,10 @@ def argumentsDictionary(args):
 			raw["args"] = { "name": arg.cli_type_name }
 			if choices != None and len(choices) > 0:
 				 raw["args"]["suggestions"] = choices
+			# raw["isOptional"] = not arg.required
 
+			if variadic:
+				raw["args"]["variadic"] = variadic
 			flags.append(raw)
 
 	return (flags, positional)
