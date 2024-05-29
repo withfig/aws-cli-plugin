@@ -9,7 +9,8 @@ jobs:
     steps:
       - name: Setup Rye
         run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
-      - run: source "$HOME/.rye/env"
+      - run: echo "$HOME/.rye/shims" >> $GITHUB_PATH
+      - run: rye config --set-bool behavior.use-uv=true
       - run: rye sync
       - run: |
           mkdir -p ./export/js/aws
