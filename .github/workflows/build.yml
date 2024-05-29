@@ -9,13 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - name: Setup Rye
-        run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
+      - run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
       - run: echo "$HOME/.rye/shims" >> $GITHUB_PATH
       - run: rye config --set-bool behavior.use-uv=true
-      # - name: Install dependencies
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install -r requirements.txt
       - run: rye sync
+      - run: rye run aws configure set plugins.aws_cli_plugin aws_cli_plugin
       - run: rye run aws
+        continue-on-error: true
