@@ -4,3 +4,6 @@ mkdir -p ./export/ts/aws
 
 aws configure set plugins.fig fig
 export PYTHONPATH=$(pwd):$PYTHONPATH
+
+
+aws configure set plugins.aws_cli_plugin aws_cli_plugin

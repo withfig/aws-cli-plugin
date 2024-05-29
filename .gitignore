@@ -1,3 +1,5 @@
-export/
+.venv
+.env
 __pycache__
-out.json
+export
+dist

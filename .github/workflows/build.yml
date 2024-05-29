@@ -1,0 +1,16 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  label_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Rye
+        run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
+      - run: rye sync
+      - run: |
+          mkdir -p ./export/js/aws
+          mkdir -p ./export/ts/aws
+      - run: rye run aws
