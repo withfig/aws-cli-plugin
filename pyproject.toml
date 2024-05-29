@@ -6,7 +6,6 @@ authors = [{ name = "Grant Gurvis", email = "grangurv@amazon.com" }]
 dependencies = [
     "awscli>=1.32.114",
 ]
-readme = "README.md"
 requires-python = ">= 3.8"
 
 [project.scripts]
