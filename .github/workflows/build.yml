@@ -7,6 +7,7 @@ jobs:
   build-completion:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Setup Rye
         run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
       - run: echo "$HOME/.rye/shims" >> $GITHUB_PATH

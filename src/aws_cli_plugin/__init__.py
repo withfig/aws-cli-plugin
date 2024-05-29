@@ -1,11 +1,11 @@
 import json
 import re
 import os
-from os.path import dirname, realpath
+from pathlib import Path
 from awscli.customizations.commands import BasicCommand
 from awscli.clidriver import ServiceCommand, ServiceOperation
 
-exportDirectory = dirname(dirname(dirname(realpath(__file__))))
+exportDirectory = Path("export")
 exportTypescript = True
 
 
@@ -174,14 +174,14 @@ def saveJsonAsSpec(d, path):
         else "var completionSpec ="
     )
     extension = ".ts" if exportTypescript else ".js"
-    directory = "{}/export/{}/".format(
-        exportDirectory, "ts" if exportTypescript else "js"
-    )
-    final = "{} {}".format(prefix, json.dumps(d, indent=4))
 
-    f = open(directory + path + extension, "w")
-    f.write(final)
-    f.close()
+    file_path = exportDirectory.joinpath("ts" if exportTypescript else "js").joinpath(
+        f"{path}{extension}"
+    )
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+
+    final = f"{prefix} {json.dumps(d, indent=4)}"
+    file_path.write_text(final)
 
 
 root = {"name": "aws", "subcommands": []}
@@ -200,7 +200,7 @@ def read_commands(command_table, session, **kwargs):
             print("ServiceCommand:", command_name)
 
             spec = generateCompletionSpecSkeleton(command_name, command)
-            path = "aws/{}".format(spec["name"])
+            path = f"aws/{spec["name"]}"
             saveJsonAsSpec(spec, path)
 
             root["subcommands"].append(
@@ -215,7 +215,7 @@ def read_commands(command_table, session, **kwargs):
             print("ServiceOperation:", command._parent_name, command_name)
         elif isinstance(command, BasicCommand):
             spec = parseBasicCommand(command)
-            path = "aws/{}".format(spec["name"])
+            path = f"aws/{spec["name"]}"
             # save spec file to disk
             saveJsonAsSpec(spec, path)
 
