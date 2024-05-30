@@ -154,9 +154,9 @@ def parseBasicCommand(command):
 
 def saveJsonAsSpec(d, path):
     prefix = (
-        "export const completionSpec: Fig.Spec ="
+        "export const completionSpec: Fig.Spec = "
         if exportTypescript
-        else "var completionSpec ="
+        else "var completionSpec = "
     )
     extension = ".ts" if exportTypescript else ".js"
 
@@ -165,7 +165,13 @@ def saveJsonAsSpec(d, path):
     )
     file_path.parent.mkdir(parents=True, exist_ok=True)
 
-    final = f"{prefix} {json.dumps(d, indent=4)}"
+    suffix = (
+        ";\n\nexport default completionSpec;"
+        if exportTypescript
+        else ";\n\nmodule.exports = completionSpec;"
+    )
+
+    final = f"{prefix}{json.dumps(d, indent=4)}{suffix}"
     file_path.write_text(final)
 
 
