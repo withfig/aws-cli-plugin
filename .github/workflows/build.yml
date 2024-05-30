@@ -28,7 +28,7 @@ jobs:
         run: rm export/ts/aws/ec2.ts 
       - uses: withfig/push-to-fig-autocomplete-action@grant/lint
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.FIG_BOT_TOKEN }}
           autocomplete-spec-name: aws
           spec-path: export/ts/aws.ts
           spec-folder-path: export/ts/aws
