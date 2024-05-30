@@ -1,3 +1,5 @@
+name: Build and Release
+
 on:
   push:
     branches:
@@ -26,5 +28,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           autocomplete-spec-name: aws
           spec-path: export/ts/aws.ts
-          specs-folder-path: export/ts/aws
+          spec-folder-path: export/ts/aws
           pr-body: Automated PR for latest AWS CLI release
