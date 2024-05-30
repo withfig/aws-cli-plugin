@@ -24,6 +24,8 @@ jobs:
       - name: Build specs
         run: rye run aws
         continue-on-error: true
+      - name: Remove ec2
+        run: rm export/ts/aws/ec2.ts 
       - uses: withfig/push-to-fig-autocomplete-action@grant/lint
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
