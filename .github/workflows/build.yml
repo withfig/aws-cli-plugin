@@ -24,10 +24,10 @@ jobs:
       - name: Build specs
         run: rye run aws
         continue-on-error: true
-      - uses: withfig/push-to-fig-autocomplete-action@v2
+      - uses: withfig/push-to-fig-autocomplete-action@grant/lint
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           autocomplete-spec-name: aws
           spec-path: export/ts/aws.ts
           spec-folder-path: export/ts/aws
-          pr-body: Automated PR for latest AWS CLI release
+          pr-body: "Automated PR for latest AWS CLI release by https://github.com/withfig/aws-cli-plugin"

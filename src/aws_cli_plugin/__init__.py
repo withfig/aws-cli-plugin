@@ -63,7 +63,6 @@ def generateCompletionSpecSkeleton(name, command):
     command_table = command._create_command_table()
     subcommands = []
     for operation_name in command_table:
-        # print(operation_name)
         operation = command_table[operation_name]
         if isinstance(operation, ServiceOperation):
             (flags, args) = argumentsDictionary(operation.arg_table)
@@ -95,7 +94,6 @@ def generateCompletionSpecSkeleton(name, command):
         "subcommands": subcommands,
     }
 
-    # write spec to file
     return spec
 
 
@@ -120,7 +118,6 @@ def getDescription(name, description):
 
 def parseBasicCommand(command):
     print("Parsing BasicCommand: ", command.name)
-    # print(command.DESCRIPTION)
     subcommands = []
     (flags, args) = argumentsDictionary(command.arg_table)
 
@@ -175,9 +172,6 @@ def saveJsonAsSpec(d, path):
     file_path.write_text(final)
 
 
-root = {"name": "aws", "subcommands": []}
-
-
 def read_commands(command_table, session, **kwargs):
     # Confusingly, we need to subcribe to all `building-command-table` events
     # in order to get full listed of services (included customized ones like S3)
@@ -185,15 +179,16 @@ def read_commands(command_table, session, **kwargs):
     if kwargs["event_name"] != "building-command-table.main":
         return
 
+    root = {"name": "aws", "subcommands": []}
+
     for command_name in command_table:
         command = command_table[command_name]
         if isinstance(command, ServiceCommand):
             print("ServiceCommand:", command_name)
-
             spec = generateCompletionSpecSkeleton(command_name, command)
             path = f"aws/{spec["name"]}"
-            saveJsonAsSpec(spec, path)
 
+            saveJsonAsSpec(spec, path)
             root["subcommands"].append(
                 {
                     "name": spec["name"],
@@ -201,15 +196,13 @@ def read_commands(command_table, session, **kwargs):
                     "loadSpec": path,
                 }
             )
-
         elif isinstance(command, ServiceOperation):
             print("ServiceOperation:", command._parent_name, command_name)
         elif isinstance(command, BasicCommand):
             spec = parseBasicCommand(command)
             path = f"aws/{spec["name"]}"
-            # save spec file to disk
-            saveJsonAsSpec(spec, path)
 
+            saveJsonAsSpec(spec, path)
             root["subcommands"].append(
                 {
                     "name": spec["name"],
@@ -217,7 +210,6 @@ def read_commands(command_table, session, **kwargs):
                     "loadSpec": path,
                 }
             )
-
         else:
             print(type(command), command_name)
 
