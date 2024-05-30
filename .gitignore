@@ -5,3 +5,4 @@ export
 dist
 .DS_Store
 .ruff_cache
+node_modules

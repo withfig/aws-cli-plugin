@@ -14,7 +14,13 @@ def awscli_initialize(cli):
 
 
 def cleanDescription(text):
-    return re.sub("<[^<]+?>", "", text).strip().rstrip(".").strip()
+    # replace the final '.'
+    text = re.sub("<[^<]+?>", "", text).strip().rstrip(".").strip()
+    if len(text) > 0:
+        # make the first char upper case
+        text = text[0].upper() + text[1:]
+        return text
+    return None
 
 
 def argumentsDictionary(args):
