@@ -2,29 +2,20 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: 0 0 * * 3
 
 jobs:
-  build-completion:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - uses: actions/setup-node@v4
       - run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
       - run: echo "$HOME/.rye/shims" >> $GITHUB_PATH
       - run: rye config --set-bool behavior.use-uv=true
       - run: rye sync
       - run: rye lock --update awscli
+      - run: rye run ruff check --output-format=github .
       - run: rye run aws configure set plugins.aws_cli_plugin aws_cli_plugin
       - name: Build specs
         run: rye run aws
         continue-on-error: true
-      - uses: withfig/push-to-fig-autocomplete-action@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          autocomplete-spec-name: aws
-          spec-path: export/ts/aws.ts
-          specs-folder-path: export/ts/aws
-          pr-body: Automated PR for latest AWS CLI release

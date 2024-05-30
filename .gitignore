@@ -4,3 +4,4 @@ __pycache__
 export
 dist
 .DS_Store
+.ruff_cache

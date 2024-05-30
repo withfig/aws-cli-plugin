@@ -1,6 +1,6 @@
 import json
 import re
-import os
+import os.path as path
 from pathlib import Path
 from awscli.customizations.commands import BasicCommand
 from awscli.clidriver import ServiceCommand, ServiceOperation
@@ -11,21 +11,6 @@ exportTypescript = True
 
 def awscli_initialize(cli):
     cli.register("building-command-table", read_commands)
-
-
-def print_args(args):
-    for argName in args:
-        arg = args[argName]
-        argJSON = {
-            "name": arg.cli_name,
-            "type": arg.cli_type_name,
-            "nargs": arg.nargs,
-            "required": arg.required,
-            "documentation": arg.documentation,
-            "suggestions": arg.choices,
-        }
-
-        # print(arg.cli_name, arg.cli_type_name, arg.nargs, arg.required, arg.documentation, arg.choices)
 
 
 def stripHTML(text):
@@ -120,10 +105,10 @@ def getDescription(name, description):
         if value.filename is not None:
             trailing_path = value.filename
         else:
-            trailing_path = os.path.join(name, "_description" + ".rst")
+            trailing_path = path.join(name, "_description" + ".rst")
         root_module = value.root_module
-        doc_path = os.path.join(
-            os.path.abspath(os.path.dirname(root_module.__file__)),
+        doc_path = path.join(
+            path.abspath(path.dirname(root_module.__file__)),
             "examples",
             trailing_path,
         )
