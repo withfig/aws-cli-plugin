@@ -13,8 +13,8 @@ def awscli_initialize(cli):
     cli.register("building-command-table", read_commands)
 
 
-def stripHTML(text):
-    return re.sub("<[^<]+?>", "", text).strip()
+def cleanDescription(text):
+    return re.sub("<[^<]+?>", "", text).strip().rstrip(".").strip()
 
 
 def argumentsDictionary(args):
@@ -27,7 +27,7 @@ def argumentsDictionary(args):
             if arg.choices is None or isinstance(arg.choices, list)
             else list(arg.choices)
         )
-        description = stripHTML(arg.documentation)
+        description = cleanDescription(arg.documentation)
         variadic = arg.nargs is not None and arg.nargs == "+"
         # print(arg.cli_name, arg.nargs, arg.required)
         # js = { "name": arg.cli_name, "type": arg.cli_type_name, "nargs": arg.nargs, "required":  arg.required, "documentation": arg.documentation, "suggestions": arg.choices}
@@ -41,7 +41,7 @@ def argumentsDictionary(args):
                 raw["suggestions"] = choices
             # raw["isOptional"] = not arg.required
             if variadic:
-                raw["variadic"] = variadic
+                raw["isVariadic"] = variadic
 
             positional.append(raw)
         elif arg.cli_type_name == "boolean":
@@ -53,7 +53,7 @@ def argumentsDictionary(args):
             # raw["isOptional"] = not arg.required
 
             if variadic:
-                raw["args"]["variadic"] = variadic
+                raw["args"]["isVariadic"] = variadic
             flags.append(raw)
 
     return (flags, positional)
@@ -66,7 +66,7 @@ def generateCompletionSpecSkeleton(name, command):
         operation = command_table[operation_name]
         if isinstance(operation, ServiceOperation):
             (flags, args) = argumentsDictionary(operation.arg_table)
-            description = stripHTML(operation._operation_model.documentation)
+            description = cleanDescription(operation._operation_model.documentation)
 
             subcommand = {"name": operation_name}
 
@@ -90,7 +90,7 @@ def generateCompletionSpecSkeleton(name, command):
 
     spec = {
         "name": name,
-        "description": stripHTML(command.service_model.documentation),
+        "description": cleanDescription(command.service_model.documentation),
         "subcommands": subcommands,
     }
 
@@ -151,7 +151,7 @@ def parseBasicCommand(command):
 
 def saveJsonAsSpec(d, path):
     prefix = (
-        "export const completionSpec: Fig.Spec = "
+        "const completionSpec: Fig.Spec = "
         if exportTypescript
         else "var completionSpec = "
     )
