@@ -13,9 +13,9 @@ def awscli_initialize(cli):
     cli.register("building-command-table", read_commands)
 
 
-def cleanDescription(text):
-    # replace the final '.'
-    text = re.sub("<[^<]+?>", "", text).strip().rstrip(".").strip()
+def cleanDescription(text: str) -> str:
+    text = re.sub("<[^<]+?>", "", text).strip()
+    text = text.rstrip(".").rstrip().rstrip(".").rstrip()
     if len(text) > 0:
         # make the first char upper case
         text = text[0].upper() + text[1:]
@@ -65,7 +65,7 @@ def argumentsDictionary(args):
     return (flags, positional)
 
 
-def generateCompletionSpecSkeleton(name, command):
+def generateCompletionSpecSkeleton(name: str, command):
     command_table = command._create_command_table()
     subcommands = []
     for operation_name in command_table:
@@ -83,7 +83,10 @@ def generateCompletionSpecSkeleton(name, command):
                 subcommand["options"] = flags
 
             if args is not None and len(args) > 0:
-                subcommand["args"] = args
+                if len(args) == 1:
+                    subcommand["args"] = args[0]
+                else:
+                    subcommand["args"] = args
 
             subcommands.append(subcommand)
 
@@ -103,7 +106,7 @@ def generateCompletionSpecSkeleton(name, command):
     return spec
 
 
-def getDescription(name, description):
+def getDescription(name: str, description):
     value = description
     if isinstance(value, BasicCommand.FROM_FILE):
         if value.filename is not None:
@@ -137,7 +140,7 @@ def parseBasicCommand(command):
         # invariant: subcommands must conform to BasicCommand
         subcommands.append(parseBasicCommand(subcommand))
 
-    description = getDescription(command.name, command.DESCRIPTION)
+    description = cleanDescription(getDescription(command.name, command.DESCRIPTION))
 
     spec = {"name": command.name}
 
@@ -148,7 +151,10 @@ def parseBasicCommand(command):
         spec["options"] = flags
 
     if args is not None and len(args) > 0:
-        spec["args"] = args
+        if len(args) == 1:
+            spec["args"] = args[0]
+        else:
+            spec["args"] = args
 
     if subcommands is not None and len(subcommands) > 0:
         spec["subcommands"] = subcommands
