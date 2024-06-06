@@ -193,7 +193,17 @@ def read_commands(command_table, session, **kwargs):
     if kwargs["event_name"] != "building-command-table.main":
         return
 
-    root = {"name": "aws", "subcommands": []}
+    root = {
+        "name": "aws",
+        "options": [
+            {
+                "name": "--profile",
+                "description": "Use a specific profile from your credential file",
+                "args": {},
+            },
+        ],
+        "subcommands": [],
+    }
 
     for command_name in command_table:
         command = command_table[command_name]

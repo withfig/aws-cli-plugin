@@ -24,8 +24,8 @@ jobs:
       - name: Build specs
         run: rye run aws
         continue-on-error: true
-      - name: Remove ec2
-        run: rm export/ts/aws/ec2.ts 
+      - name: Remove ec2 and s3
+        run: rm export/ts/aws/ec2.ts export/ts/aws/s3.ts 
       - name: Run prettier
         run: npx -y prettier --ignore-path=.prettierignore -w export/ts 
       - uses: withfig/push-to-fig-autocomplete-action@v2
