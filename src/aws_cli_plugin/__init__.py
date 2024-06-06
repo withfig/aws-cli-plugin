@@ -1,6 +1,7 @@
 import json
 import re
 import os.path as path
+import html
 from pathlib import Path
 from awscli.customizations.commands import BasicCommand
 from awscli.clidriver import ServiceCommand, ServiceOperation
@@ -16,6 +17,7 @@ def awscli_initialize(cli):
 def cleanDescription(text: str) -> str:
     text = re.sub("<[^<]+?>", "", text).strip()
     text = text.rstrip(".").rstrip().rstrip(".").rstrip()
+    text = html.unescape(text)
     if len(text) > 0:
         # make the first char upper case
         text = text[0].upper() + text[1:]

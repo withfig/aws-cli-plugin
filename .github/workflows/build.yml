@@ -26,6 +26,8 @@ jobs:
         continue-on-error: true
       - name: Remove ec2
         run: rm export/ts/aws/ec2.ts 
+      - name: Run prettier
+        run: npx -y prettier --ignore-path=.prettierignore -w export/ts 
       - uses: withfig/push-to-fig-autocomplete-action@v2
         with:
           token: ${{ secrets.FIG_BOT_TOKEN }}
