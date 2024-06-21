@@ -20,14 +20,15 @@ jobs:
       - run: rye config --set-bool behavior.use-uv=true
       - run: rye sync
       - run: rye lock --update awscli
+      - run: rye sync
       - run: rye run aws configure set plugins.aws_cli_plugin aws_cli_plugin
       - name: Build specs
         run: rye run aws
         continue-on-error: true
       - name: Remove ec2 and s3
-        run: rm export/ts/aws/ec2.ts export/ts/aws/s3.ts 
+        run: rm export/ts/aws/ec2.ts export/ts/aws/s3.ts
       - name: Run prettier
-        run: npx -y prettier --ignore-path=.prettierignore -w export/ts 
+        run: npx -y prettier --ignore-path=.prettierignore -w export/ts
       - uses: withfig/push-to-fig-autocomplete-action@v2
         with:
           token: ${{ secrets.FIG_BOT_TOKEN }}
