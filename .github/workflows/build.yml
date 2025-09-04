@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
       - run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
       - run: echo "$HOME/.rye/shims" >> $GITHUB_PATH
       - run: rye config --set-bool behavior.use-uv=true
