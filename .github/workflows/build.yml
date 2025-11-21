@@ -12,7 +12,7 @@ jobs:
   build-completion:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
       - uses: actions/setup-node@v4
       - run: curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
